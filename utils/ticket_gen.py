@@ -33,16 +33,16 @@ def generate_ticket(concert_name, row, seat, user_name, concert_time, qr_data):
     draw.text((60, 240), "SCAN ME", font=font_small, fill=black)
 
     info_x = 280
-    draw.text((info_x, 30), "KONSЕRT CHIPTASI", font=font_small, fill=accent)
+    draw.text((info_x, 30), "KONCЕRT CHIPTESI", font=font_small, fill=accent)
     draw.text((info_x, 60), concert_name.upper(), font=font_bold, fill=black)
 
-    draw.text((info_x, 120), f"QATOR: {row}", font=font_regular, fill=black)
+    draw.text((info_x, 120), f"QATAR: {row}", font=font_regular, fill=black)
     draw.text((info_x + 200, 120), f"JOY: {seat}", font=font_regular, fill=black)
 
     draw.text((info_x, 170), f"FOYDALANUVCHI: {user_name}", font=font_regular, fill=black)
-    draw.text((info_x, 210), f"Vaqt: {concert_time}", font=font_regular, fill=accent)
+    draw.text((info_x, 210), f"Waqt: {concert_time}", font=font_regular, fill=accent)
 
-    draw.text((info_x, 250), "Biletni kirishda ko'rsating.", font=font_small, fill=accent)
+    draw.text((info_x, 250), "Bileti kiriste korseting.", font=font_small, fill=accent)
 
     buf = io.BytesIO()
     img.save(buf, format='PNG')

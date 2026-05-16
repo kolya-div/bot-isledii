@@ -66,9 +66,9 @@ def get_admin_main_kb(is_super: bool) -> InlineKeyboardMarkup:
     buttons = []
     
     if is_super:
-        buttons.append([InlineKeyboardButton(text="🎸 Yangi Konsert qo'shish", callback_data="add_concert_start")])
+        buttons.append([InlineKeyboardButton(text="🎸 Jańa koncert qosıw", callback_data="add_concert_start")])
         buttons.append([
-            InlineKeyboardButton(text="💰 Bilet sotish", callback_data="sell_ticket"),
+            InlineKeyboardButton(text="💰 Bilet satiw", callback_data="sell_ticket"),
             InlineKeyboardButton(text="📊 Statistika", callback_data="show_stats")
         ])
         # MANA SHU YER O'ZGARDI:
@@ -76,7 +76,7 @@ def get_admin_main_kb(is_super: bool) -> InlineKeyboardMarkup:
         
     else:
         buttons.append([
-            InlineKeyboardButton(text="💰 Bilet sotish", callback_data="sell_ticket"),
+            InlineKeyboardButton(text="💰 Bilet satiw", callback_data="sell_ticket"),
             InlineKeyboardButton(text="📊 Statistika", callback_data="show_stats")
         ])
         
@@ -85,13 +85,13 @@ def get_cancel_kb():
 
     """Jarayonni bekor qilish tugmasi (Qizil e'tibor tortuvchi)"""
     return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="🚫 Amalni bekor qilish", callback_data="back_to_main")]
+        [InlineKeyboardButton(text="🚫 Ámeldi biykarlaw", callback_data="back_to_main")]
     ])
 
 def get_back_keyboard():
     """Umumiy orqaga qaytish tugmasi"""
     return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="⬅️ Orqaga qaytish", callback_data="back_to_main")]
+        [InlineKeyboardButton(text="⬅️ Artqa qaytıw", callback_data="back_to_main")]
     ])
 
 # =====================================================================
@@ -109,26 +109,26 @@ async def cmd_start(message: Message, state: FSMContext):
         await message.answer(
             f"🛠 **Admin paneliga xush kelibsiz!**\n\n"
             f"Sizning ID: `{user_id}`\n"
-            f"Daraja: {'Super Admin' if is_super else 'Admin'}",
+            f"Dareje: {'Super Admin' if is_super else 'Admin'}",
             reply_markup=get_admin_main_kb(is_super),
             parse_mode="Markdown"
         )
     else:
         # Foydalanuvchi menyusi (Algoritm 24-band)
         user_kb = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="🎫 Bilet sotib olish", callback_data="buy_ticket")],
-            [InlineKeyboardButton(text="ℹ️ Konsert haqida", callback_data="concert_info")],
-            [InlineKeyboardButton(text="📞 Admin bilan bog'lanish", callback_data="contact_admin")]
+            [InlineKeyboardButton(text="🎫 Bilet satıp alıw", callback_data="buy_ticket")],
+            [InlineKeyboardButton(text="ℹ️ Konsert haqqında ", callback_data="concert_info")],
+            [InlineKeyboardButton(text="📞 Admin menen baylanısıw", callback_data="contact_admin")]
         ])
         await message.answer(
-            f"Salom {message.from_user.first_name}! 👋\n\n"
-            f"Konsert biletlari botiga xush kelibsiz.",
+            f"Salem {message.from_user.first_name}! 👋\n\n"
+            f"Koncert biletleri botına xosh keldińiz.",
             reply_markup=user_kb
         )
 
 @router.callback_query(F.data == "back_to_main")
 async def back_to_main_handler(call: CallbackQuery, state: FSMContext):
-    """Asosiy admin menyusiga qaytish"""
+    """Tiykarǵı admin menyusine qaytıw"""
     await state.clear()
     is_super = (call.from_user.id == SUPER_ADMIN_ID)
     await call.message.edit_text(
@@ -142,25 +142,25 @@ async def back_to_main_handler(call: CallbackQuery, state: FSMContext):
 
 @router.callback_query(F.data == "add_concert_start")
 async def add_concert_confirm_handler(call: CallbackQuery):
-    """Yangi konsert qo'shishdan oldin ogohlantirish va tasdiqlash"""
+    """Jańa koncert qosıwdan aldın eskertiw hám tastıyıqlaw"""
     # Tasdiqlash tugmalari
     confirm_kb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="✅ Ha, o'chirib yangidan boshlash", callback_data="confirm_new_concert")],
-        [InlineKeyboardButton(text="❌ Yo'q, bekor qilish", callback_data="back_to_main")]
+        [InlineKeyboardButton(text="✅ Awa, óshirip jańadan baslaw", callback_data="confirm_new_concert")],
+        [InlineKeyboardButton(text="❌ Joq, biykarlaw", callback_data="back_to_main")]
     ])
     
     await call.message.edit_text(
-        "⚠️ **DIQQAT! JIDDIY AMALIYOT**\n\n"
-        "Siz yangi konsert yaratmoqchisiz. Agar buni tasdiqlasangiz, **oldingi barcha konsert ma'lumotlari, "
-        "kiritilgan qatorlar va sotilgan biletlar bazadan butunlay o'chib ketadi!**\n\n"
-        "Haqiqatan ham hamma eski ma'lumotni o'chirib, yangi konsert qo'shishni xohlaysizmi?",
+        "⚠️ **DÍQQAT! awır ámeliyat**\n\n"
+        "Siz jańa koncert jaratpaqshısız. Eger bunı tastıyıqlasańız, **aldınǵı barlıq koncert maǵlıwmatları, "
+        "Kirgizilgen qatarlar hám satılǵan biletler bazadan pútkilley joǵaladı!**\n\n"
+        "Haqıyqatında da barlıq eski maǵlıwmattı óshirip, jańa koncert qosıwdı qáleysiz be?",
         reply_markup=confirm_kb,
         parse_mode="Markdown"
     )
 
 @router.callback_query(F.data == "confirm_new_concert")
 async def add_concert_step_1(call: CallbackQuery, state: FSMContext):
-    """Tasdiqlangandan so'ng bazani tozalab, 1-qadamni boshlash"""
+    """Tastıyıqlanǵannan soń bazanı tazalap, 1-qádemdi baslaw"""
     
     # 1. Eski ma'lumotlarni bazadan tozalash
     async with async_session() as session:
@@ -172,16 +172,16 @@ async def add_concert_step_1(call: CallbackQuery, state: FSMContext):
             await session.execute(delete(Concert))
             await session.commit()
         except Exception as e:
-            logging.error(f"Bazani tozalashda xatolik: {e}")
+            logging.error(f"Bazanı tazalawda qáte: {e}")
             return await call.message.edit_text(
-                "❌ Eski ma'lumotlarni o'chirishda xatolik yuz berdi. Dasturchiga murojaat qiling.",
+                "❌ Eski maǵlıwmatlardı óshiriwde qátelik júz berdi. Programmist penen baylanısıń.",
                 reply_markup=get_back_keyboard()
             )
 
     # 2. Tozalab bo'lgach, rasmni so'rash
     await call.message.edit_text(
-        "✅ **Baza tozalandi!**\n\n"
-        "🖼 **1-Qadam:** Yangi konsert uchun reklama fotosini yuboring:", 
+        "✅ **Baza tazalandi!**\n\n"
+        "🖼 **1-Qadem:** Jana koncert ushın reklama fotosın jiberiń::", 
         reply_markup=get_cancel_kb(), 
         parse_mode="Markdown"
     )
@@ -191,49 +191,49 @@ async def add_concert_step_1(call: CallbackQuery, state: FSMContext):
 # =====================================================================
 @router.callback_query(F.data == "add_concert_start")
 async def add_concert_step_1(call: CallbackQuery, state: FSMContext):
-    await call.message.edit_text("🖼 **1-Qadam:** Konsert reklama fotosini yuboring:", reply_markup=get_cancel_kb(), parse_mode="Markdown")
+    await call.message.edit_text("🖼 **1-Qadem:** Koncert reklama fotosini jbering:", reply_markup=get_cancel_kb(), parse_mode="Markdown")
     await state.set_state(AdminStates.waiting_for_reklama_photo)
 
 @router.message(AdminStates.waiting_for_reklama_photo, F.photo)
 async def add_concert_step_2(message: Message, state: FSMContext):
     await state.update_data(reklama_photo=message.photo[-1].file_id)
-    await message.answer("📝 **2-Qadam:** Konsert nomini kiriting:", reply_markup=get_cancel_kb(), parse_mode="Markdown")
+    await message.answer("📝 **2-Qadem:** Koncert atamasın kirgiziń:", reply_markup=get_cancel_kb(), parse_mode="Markdown")
     await state.set_state(AdminStates.waiting_for_concert_name)
 
 @router.message(AdminStates.waiting_for_concert_name)
 async def add_concert_step_3(message: Message, state: FSMContext):
     await state.update_data(name=message.text)
-    await message.answer("📅 **3-Qadam:** Konsert yilini kiriting (masalan: 2026):", reply_markup=get_cancel_kb(), parse_mode="Markdown")
+    await message.answer("📅 **3-Qadem:** Koncert jılın kirgiziń (máselen: 2026):", reply_markup=get_cancel_kb(), parse_mode="Markdown")
     await state.set_state(AdminStates.waiting_for_concert_year)
 
 @router.message(AdminStates.waiting_for_concert_year)
 async def add_concert_step_4(message: Message, state: FSMContext):
     await state.update_data(year=message.text)
-    await message.answer("🗓 **4-Qadam:** Konsert oyini kiriting (masalan: Avgust):", reply_markup=get_cancel_kb(), parse_mode="Markdown")
+    await message.answer("🗓 **4-Qadem:** Koncert ayın kirgiziń (máselen: Avgust):", reply_markup=get_cancel_kb(), parse_mode="Markdown")
     await state.set_state(AdminStates.waiting_for_concert_month)
 
 @router.message(AdminStates.waiting_for_concert_month)
 async def add_concert_step_5(message: Message, state: FSMContext):
     await state.update_data(month=message.text)
-    await message.answer("📆 **5-Qadam:** Konsert kunini kiriting (masalan: 25):", reply_markup=get_cancel_kb(), parse_mode="Markdown")
+    await message.answer("📆 **5-Qadem:** kúnin kirgiziń (máselen: 25):", reply_markup=get_cancel_kb(), parse_mode="Markdown")
     await state.set_state(AdminStates.waiting_for_concert_day)
 
 @router.message(AdminStates.waiting_for_concert_day)
 async def add_concert_step_6(message: Message, state: FSMContext):
     await state.update_data(day=message.text)
-    await message.answer("⏰ **6-Qadam:** Konsert boshlanish vaqtini kiriting (masalan: 19:30):", reply_markup=get_cancel_kb(), parse_mode="Markdown")
+    await message.answer("⏰ **6-Qadem:** Koncert baslanıw waqtın kirgiziń (máselen: 19:30):", reply_markup=get_cancel_kb(), parse_mode="Markdown")
     await state.set_state(AdminStates.waiting_for_concert_time)
 
 @router.message(AdminStates.waiting_for_concert_time)
 async def add_concert_step_7(message: Message, state: FSMContext):
     await state.update_data(time=message.text)
-    await message.answer("🏟 **7-Qadam:** Konsert binosi/zalining suratini yuboring:", reply_markup=get_cancel_kb(), parse_mode="Markdown")
+    await message.answer("🏟 **7-Qadem:** Koncert imaratı/zalınıń súwretin jiberiń:", reply_markup=get_cancel_kb(), parse_mode="Markdown")
     await state.set_state(AdminStates.waiting_for_zal_photo)
 
 @router.message(AdminStates.waiting_for_zal_photo, F.photo)
 async def add_concert_step_8(message: Message, state: FSMContext):
     await state.update_data(zal_photo=message.photo[-1].file_id)
-    await message.answer("🔢 **8-Qadam:** Zalda necha qator bor? (Faqat raqam):", reply_markup=get_cancel_kb(), parse_mode="Markdown")
+    await message.answer("🔢 **8-Qadem:** Zalda neshe qatar bar? (Tek nomer):", reply_markup=get_cancel_kb(), parse_mode="Markdown")
     await state.set_state(AdminStates.waiting_for_rows_count)
 
 # =====================================================================
@@ -242,12 +242,12 @@ async def add_concert_step_8(message: Message, state: FSMContext):
 @router.message(AdminStates.waiting_for_rows_count)
 async def add_concert_step_9(message: Message, state: FSMContext):
     if not message.text.isdigit():
-        return await message.answer("Iltimos, faqat raqam kiriting!")
+        return await message.answer("Iltimas, tek nomer kirgiziń!!")
     
     rows_count = int(message.text)
     await state.update_data(rows_count=rows_count, current_processing_row=1, row_data={})
     
-    await message.answer(f"💰 **1-qator** bilet narxini kiriting (masalan: 150000):", reply_markup=get_cancel_kb(), parse_mode="Markdown")
+    await message.answer(f"💰 **1-qatar** bilet bahasın kirgiziń (máselen: 150000):", reply_markup=get_cancel_kb(), parse_mode="Markdown")
     await state.set_state(AdminStates.waiting_for_row_price)
 
 @router.message(AdminStates.waiting_for_row_price)
@@ -260,13 +260,13 @@ async def add_concert_step_10(message: Message, state: FSMContext):
     row_data[row_num] = {'price': message.text}
     await state.update_data(row_data=row_data)
     
-    await message.answer(f"💺 **{row_num}-qatorda** nechta joy bor?", reply_markup=get_cancel_kb(), parse_mode="Markdown")
+    await message.answer(f"💺 **{row_num}-qatarda** neshe orin bar?", reply_markup=get_cancel_kb(), parse_mode="Markdown")
     await state.set_state(AdminStates.waiting_for_seats_per_row)
 
 @router.message(AdminStates.waiting_for_seats_per_row)
 async def add_concert_step_11(message: Message, state: FSMContext):
     if not message.text.isdigit():
-        return await message.answer("Joylar sonini raqamda kiriting!")
+        return await message.answer("Orinlar sanin sanada kiriting!")
         
     data = await state.get_data()
     row_num = data['current_processing_row']
@@ -279,11 +279,11 @@ async def add_concert_step_11(message: Message, state: FSMContext):
     if row_num < total_rows:
         next_row = row_num + 1
         await state.update_data(current_processing_row=next_row)
-        await message.answer(f"💰 **{next_row}-qator** bilet narxini kiriting:", reply_markup=get_cancel_kb(), parse_mode="Markdown")
+        await message.answer(f"💰 **{next_row}-qatar** bilet bahasın kirgiziń:", reply_markup=get_cancel_kb(), parse_mode="Markdown")
         await state.set_state(AdminStates.waiting_for_row_price)
     else:
         # HAMMA MA'LUMOTLAR OLINDI - BAZAGA SAQLASH
-        await message.answer("⌛️ Ma'lumotlar bazaga saqlanmoqda, kuting...")
+        await message.answer("⌛️ Maǵlıwmatlar bazaǵa saqlanbaqta, kútiń...")
         
         async with async_session() as session:
             try:
@@ -320,18 +320,18 @@ async def add_concert_step_11(message: Message, state: FSMContext):
                 # Yakuniy xabar
                 await message.answer_photo(
                     photo=data['reklama_photo'],
-                    caption=f"✅ **KONSERT MUVAFFAQIYATLI YARATILDI!**\n\n"
-                            f"🎸 Nomi: {data['name']}\n"
-                            f"📅 Vaqti: {data['day']}-{data['month']} {data['year']} soat {data['time']}\n"
-                            f"🔢 Qatorlar: {total_rows} ta",
+                    caption=f"✅ ****KONCERT TABÍSLÍ DÚZILDI!**\n\n"
+                            f"🎸 Ati: {data['name']}\n"
+                            f"📅 Waqti : {data['day']}-{data['month']} {data['year']} soat {data['time']}\n"
+                            f"🔢 Qatarlar: {total_rows} ta",
                     parse_mode="Markdown"
                 )
                 await message.answer("🛠 Admin paneliga qaytdingiz:", reply_markup=get_admin_main_kb(message.from_user.id == SUPER_ADMIN_ID))
                 await state.clear()
                 
             except Exception as e:
-                logging.error(f"Konsert saqlashda xato: {e}")
-                await message.answer("❌ Bazaga saqlashda xatolik yuz berdi. Qayta urinib ko'ring.")
+                logging.error(f"Koncert saqlawda qáte: {e}")
+                await message.answer("❌ Bazaǵa saqlawda qáte júz berdi. Qayta urınıń.")
 
 # =====================================================================
 # STATISTIKA VA ADMIN QO'SHISH
@@ -348,16 +348,16 @@ async def admin_stats_handler(call: CallbackQuery):
         
         await call.message.edit_text(
             f"📊 **Bot Statistikasi:**\n\n"
-            f"🎫 Umumiy joylar: {t}\n"
-            f"✅ Sotilgan/Bron: {b}\n"
-            f"⏳ Bo'sh joylar: {t - b}",
+            f"🎫 Ulıwma orinlar: {t}\n"
+            f"✅ Satilgan/Bron: {b}\n"
+            f"⏳ Bo's orinlar: {t - b}",
             reply_markup=get_cancel_kb(),
             parse_mode="Markdown"
         )
 
 @router.callback_query(F.data == "add_admin")
 async def add_admin_call(call: CallbackQuery, state: FSMContext):
-    await call.message.edit_text("👤 Yangi adminning Telegram ID sini yuboring:", reply_markup=get_cancel_kb())
+    await call.message.edit_text("👤 Taza adminning Telegram ID sini yuboring:", reply_markup=get_cancel_kb())
     await state.set_state(AdminStates.waiting_for_admin_id)
 
 @router.message(AdminStates.waiting_for_admin_id)
@@ -369,7 +369,7 @@ async def add_admin_db(message: Message, state: FSMContext):
         new_a = AdminUser(tg_id=int(message.text), name=f"Admin_{message.text}")
         session.add(new_a)
         await session.commit()
-        await message.answer(f"✅ ID: {message.text} muvaffaqiyatli bazaga Admin qilib qo'shildi!")
+        await message.answer(f"✅ ID: {message.text} Tabisli bazaga Admin qilib qo'sildi!")
         await state.clear()
         await message.answer("🛠 Admin panel:", reply_markup=get_admin_main_kb(message.from_user.id == SUPER_ADMIN_ID))
 
@@ -380,7 +380,7 @@ async def add_admin_db(message: Message, state: FSMContext):
 async def contact_admin_handler(call: CallbackQuery):
     # Algoritm 42-band
     await call.message.answer(
-        f"👨‍💻 **Admin bilan bog'lanish:**\n\n"
+        f"👨‍💻 **Admin menen baylanısıw:**\n\n"
         f"📞 Tel: `{ADMIN_PHONE}`\n"
         f"💬 Telegram: {ADMIN_USERNAME}",
         parse_mode="Markdown"
@@ -395,7 +395,7 @@ async def contact_admin_handler(call: CallbackQuery):
 async def sell_ticket_start(call: CallbackQuery):
     """Admin bilet sotish tugmasini bossa kiritilgan hamma qatorlar chiqadi """
     if not await check_is_admin(call.from_user.id):
-        return await call.answer("Bunga ruxsatingiz yo'q!", show_alert=True)
+        return await call.answer("Bungan ruxsatingiz joq!", show_alert=True)
 
     async with async_session() as session:
         # Oxirgi faol konsertni aniqlash
@@ -403,34 +403,34 @@ async def sell_ticket_start(call: CallbackQuery):
         concert = concert_res.scalar_one_or_none()
         
         if not concert:
-            return await call.message.edit_text("❌ Hali birorta ham konsert yaratilmagan!", reply_markup=get_cancel_kb())
+            return await call.message.edit_text("❌ Ele biranta da koncert jaratilmagan!", reply_markup=get_cancel_kb())
 
         # Qatorlarni olish
         rows_res = await session.execute(select(Row).where(Row.concert_id == concert.id).order_by(Row.row_number))
         rows = rows_res.scalars().all()
         
         if not rows:
-            return await call.message.edit_text("❌ Ushbu konsert uchun qatorlar kiritilmagan!", reply_markup=get_cancel_kb())
+            return await call.message.edit_text("❌ Bul koncert ushın qatarlar kirgizilmegen!", reply_markup=get_cancel_kb())
 
         keyboard = []
         # Har bir qator uchun inline tugma 
         for r in rows:
             keyboard.append([InlineKeyboardButton(
-                text=f"Qator: {r.row_number} | Narxi: {r.price} so'm", 
+                text=f"Qatar: {r.row_number} | Bahasi: {r.price} so'm", 
                 callback_data=f"sel_row_{r.id}"
             )])
         
-        keyboard.append([InlineKeyboardButton(text="🔙 Orqaga", callback_data="back_to_main")])
+        keyboard.append([InlineKeyboardButton(text="🔙 Artaqa", callback_data="back_to_main")])
         
         await call.message.edit_text(
-            f"🏟 **{concert.name}**\n\nIltimos, sotish uchun qatorni tanlang:",
+            f"🏟 **{concert.name}**\n\nIltimas, satiw ushun qatardi tanlang:",
             reply_markup=InlineKeyboardMarkup(inline_keyboard=keyboard),
             parse_mode="Markdown"
         )
 
 @router.callback_query(F.data.startswith("sel_row_"))
 async def sell_ticket_select_seat(call: CallbackQuery):
-    """Qator tanlanganda osha qatordagi hamma joylar chiqib keladi """
+    """Qatar tanlanganda sol qatardaǵı barlıq orınlar shiģip ketedi. """
     row_id = int(call.data.split("_")[2])
     
     async with async_session() as session:
@@ -459,17 +459,17 @@ async def sell_ticket_select_seat(call: CallbackQuery):
             
             keyboard[row_idx].append(InlineKeyboardButton(text=btn_text, callback_data=cb_data))
         
-        keyboard.append([InlineKeyboardButton(text="🔙 Qatorlarga qaytish", callback_data="sell_ticket")])
+        keyboard.append([InlineKeyboardButton(text="🔙 Qatarlarga qaytiw", callback_data="sell_ticket")])
         
         await call.message.edit_text(
-            f"💺 **{row.row_number}-qator** tanlandi.\nNarxi: `{row.price}` so'm.\n\nSotish uchun joyni tanlang:",
+            f"💺 **{row.row_number}-qatar** tanlandi.\nBahasi: `{row.price}` so'm.\n\nSatiw ushun orindi tanlang:",
             reply_markup=InlineKeyboardMarkup(inline_keyboard=keyboard),
             parse_mode="Markdown"
         )
 
 @router.callback_query(F.data == "seat_taken")
 async def seat_taken_handler(call: CallbackQuery):
-    await call.answer("❌ Bu joy allaqachon sotilgan!", show_alert=True)
+    await call.answer("❌ Bul jer álleqashan satılǵan!", show_alert=True)
 
 @router.callback_query(F.data.startswith("sel_seat_"))
 async def sell_ticket_get_name(call: CallbackQuery, state: FSMContext):
@@ -482,13 +482,13 @@ async def sell_ticket_get_name(call: CallbackQuery, state: FSMContext):
         await state.update_data(target_seat_id=seat_id)
         
         back_kb = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="🔙 Orqaga", callback_data=f"sel_row_{seat.row_id}")]
+            [InlineKeyboardButton(text="🔙 Artaqa", callback_data=f"sel_row_{seat.row_id}")]
         ])
         
         try:
             # Xabarni o'zgartirishga urinamiz
             await call.message.edit_text(
-                f"👤 **Joy {seat.seat_number} tanlandi.**\n\nBilet egasining ism va familiyasini kiriting:",
+                f"👤 **Orin {seat.seat_number} tańlandı.**\n\nBilet iyesiniń atı hám familiyasın kirgiziń:",
                 reply_markup=back_kb,
                 parse_mode="Markdown"
             )
@@ -503,7 +503,7 @@ async def sell_ticket_get_name(call: CallbackQuery, state: FSMContext):
 
 @router.message(SellTicketStates.waiting_for_customer_name)
 async def sell_ticket_finalize(message: Message, state: FSMContext):
-    """Ism kiritilgach unikal QR kodli bilet yasaydi"""
+    """Atı kirgizilgennen keyin ózine tán QR kodlı bilet jaratadı"""
     user_data = await state.get_data()
     seat_id = user_data.get('target_seat_id') 
     full_name = message.text #
@@ -520,7 +520,7 @@ async def sell_ticket_finalize(message: Message, state: FSMContext):
             data = res.fetchone()
             
             if not data:
-                return await message.answer("❌ Xatolik: Joy topilmadi.")
+                return await message.answer("❌ Xatelik: orin tapilmadi.")
                 
             seat, row, concert = data
             
@@ -554,10 +554,10 @@ async def sell_ticket_finalize(message: Message, state: FSMContext):
             await message.answer_photo(
                 photo=photo,
                 caption=(
-                    f"✅ **Bilet muvaffaqiyatli sotildi!**\n\n"
-                    f"👤 Mijoz: {full_name}\n"
+                    f"✅ **Bilet tabisli satildi!**\n\n"
+                    f"👤 Mijaz: {full_name}\n"
                     f"🎫 Bilet kodi: `{unique_code}`\n\n"
-                    f"Skaner uchun tayyor!"
+                    f"Skaner ushun tayyar!"
                 ),
                 parse_mode="Markdown"
             )
@@ -566,16 +566,16 @@ async def sell_ticket_finalize(message: Message, state: FSMContext):
             await message.answer("🛠 Admin panel:", reply_markup=get_admin_main_kb(message.from_user.id == SUPER_ADMIN_ID))
 
         except Exception as e:
-            logging.error(f"QR kod yaratishda xato: {e}")
-            await message.answer("❌ QR kodli biletni yasashda xatolik yuz berdi.")
+            logging.error(f"QR kod jaratıwda qáte: {e}")
+            await message.answer("❌ QR kodlı biletti tayarlawda qátelik júz berdi.")
 @router.callback_query(F.data == "send_scanner_link")
 async def send_scanner_link_handler(call: CallbackQuery):
-    """Super admin QR kod link tugmasini bosganda ishlaydi"""
+    """Super admin QR kod silteme túymesin basqanda isleydi"""
     await call.message.answer(
-        f"🌐 **QR Skaner veb-sayti manzili:**\n\n"
+        f"🌐 **QR Skaner veb-saytı mánzili:**\n\n"
         f"🔗 {WEB_APP_URL}\n\n"
-        f"👆 Ushbu ssilkani nusxalab oling yoki ustiga bosib brauzerda (Chrome, Safari) oching. "
-        f"Bu manzilni faqat ishonchli adminlarga bering!",
+        f"👆 Bul siltemeni nusqalap alıń yamasa ústine basıp brauzerde (Chrome, Safari) ashıń. "
+        f"Bul mánzildi tek isenimli adminlerge beriń!",
         parse_mode="Markdown"
     )
     await call.answer()
