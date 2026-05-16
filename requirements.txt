@@ -1,0 +1,8 @@
+
+aiogram>=3.4.1
+python-dotenv>=1.0.1
+SQLAlchemy>=2.0.25
+asyncpg>=0.29.0
+Pillow>=10.2.0
+qrcode[pil]>=7.4.2
+aiohttp>=3.9.0

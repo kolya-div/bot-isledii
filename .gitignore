@@ -1,0 +1,31 @@
+# Python muhiti uchun ortiqcha fayllar (Keshlar)
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Virtual muhit (Virtual Environment)
+# Buni GitHub'ga yuklash umuman mumkin emas, juda og'ir fayllar hisoblanadi
+venv/
+.venv/
+env/
+ENV/
+
+# Maxfiy konfiguratsiya va tokenlar (Eng muhim joyi!)
+# Bular GitHub'ga chiqib ketsa, botingizni o'g'irlab ketishishi mumkin
+config.py
+.env
+*.local
+
+# Ma'lumotlar bazasi fayllari (Lokal baza)
+*.db
+*.sqlite3
+
+# VS Code va tahrirlash dasturlarining shaxsiy sozlamalari
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
